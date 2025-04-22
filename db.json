@@ -1,0 +1,14 @@
+{
+  "analysis": [
+    {
+      "id": 1,
+      "reply": "Your request has been processed. Here is the information...",
+      "risk_score": 3,
+      "anomalies": [
+        "Suspicious link detected",
+        "Words used: 'urgent', 'transfer money'"
+      ],
+      "recommendations": ["Do not click on the link", "Verify the sender"]
+    }
+  ]
+}
