@@ -52,7 +52,9 @@ To simplify development and testing, you can run both the frontend and backend s
     cd ..
     ```
 2.  **Setup Backend & Install Dependencies:**
-    Follow the steps in `fraud-detector-service/README.md` to create and activate a virtual environment and install its Python dependencies (`pip install -r requirements.txt`). **Ensure the virtual environment is activated** in your terminal before proceeding to the next step.
+    Follow the steps in `fraud-detector-service/README.md` to create and activate a virtual environment and install
+    its Python dependencies (`pip install -r requirements.txt`). **Ensure the virtual environment is activated**
+    in your terminal before proceeding to the next step.
     ```bash
     # Example (after creating .venv inside fraud-detector-service):
     source fraud-detector-service/.venv/bin/activate
@@ -81,20 +83,12 @@ docker run -d \
 -e "KONG_CLUSTER_TELEMETRY_ENDPOINT=acf7a2b388.eu.tp0.konghq.com:443" \
 -e "KONG_CLUSTER_TELEMETRY_SERVER_NAME=acf7a2b388.eu.tp0.konghq.com" \
 -e "KONG_CLUSTER_CERT=-----BEGIN CERTIFICATE-----
-MIICjTCCAjSgAwIBAgIBATAKBggqhkjOPQQDBDB4MXYwCQYDVQQGEwJFVTBpBgNV
-BAMeYgBrAG8AbgBuAGUAYwB0AC0ARwBhAHQAZQB3AGEAeQAgAEcAdQByAHUAcwAg
-AGYAcgBhAHUAZAAgAGQAZQB0AGUAYwB0AGkAbwBuACAAQQBQAEkAIABnAGEAdABl
-AHcAYQB5MB4XDTI1MDQyMzA4NDI0NloXDTM1MDQyMzA4NDI0NloweDF2MAkGA1UE
-BhMCRVUwaQYDVQQDHmIAawBvAG4AbgBlAGMAdAAtAEcAYQB0AGUAdwBhAHkAIABH
-AHUAcgB1AHMAIABmAHIAYQB1AGQAIABkAGUAdABlAGMAdABpAG8AbgAgAEEAUABJ
-ACAAZwBhAHQAZQB3AGEAeTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABLeqLykU
-2zMTbQuweWExwLf/UZ9GZ6DwgEkfaK43ISn2CEDQEptPYkGRsaMHyXJrtevRtsvp
-1LOblhA5eC1Av8Kjga4wgaswDAYDVR0TAQH/BAIwADALBgNVHQ8EBAMCAAYwHQYD
-VR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMBcGCSsGAQQBgjcUAgQKDAhjZXJ0
-VHlwZTAjBgkrBgEEAYI3FQIEFgQUAQEBAQEBAQEBAQEBAQEBAQEBAQEwHAYJKwYB
-BAGCNxUHBA8wDQYFKQEBAQECAQoCARQwEwYJKwYBBAGCNxUBBAYCBAAUAAowCgYI
-KoZIzj0EAwQDRwAwRAIga8kXWouatXR8u5QGXpsofPHoSw5mElY2ZKjvCSqUlrYC
-ICWfaQS1LazXpPy2/SnCC0Aa+JWRFJGwryyvHbtJWTc+
+MII{REDACTED}
+xxx
+xxx
+xxx
+xxx
+xxx
 -----END CERTIFICATE-----" \
 -e "KONG_CLUSTER_CERT_KEY=-----BEGIN PRIVATE KEY-----
 MIG{REDACTED}
