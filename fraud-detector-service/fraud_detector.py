@@ -5,7 +5,7 @@ from config import FRAUD_PROMPT, PRIMARY_MODEL, FALLBACK_MODELS
 # Initialize AsyncOpper - could potentially be enhanced for singleton pattern if needed
 opper = AsyncOpper()
 
-async def detect_fraudulent_email(customer_email: str) -> FraudDetection:
+async def detect_fraudulent_email(customer_email: str, latitude: float, longitude: float) -> FraudDetection:
     """
     Analyzes a customer email using OpperAI to detect potential fraud.
 
@@ -15,6 +15,11 @@ async def detect_fraudulent_email(customer_email: str) -> FraudDetection:
     Returns:
         A FraudDetection object containing the analysis result.
     """
+    full_input = f"""
+        Email: \"{customer_email.strip()}\"
+        Latitude: {latitude}
+        Longitude: {longitude}
+        """
     result, _ = await opper.call(
         name="FraudDetection", # A descriptive name for the Opper call
         instructions=FRAUD_PROMPT,
