@@ -57,7 +57,8 @@ To simplify development and testing, you can run both the frontend and backend s
     ```
 3.  **Install Root Concurrent Runner:**
     From the **root directory**, install the tool to run commands concurrently.
-    ```bash
+    ```bash![Flowchart](https://github.com/user-attachments/assets/53e92430-9c03-4491-a6d5-6a0e41e61ed8)
+
     # Ensure you are in the monorepo root directory
     npm install --save-dev concurrently
     ```
@@ -128,3 +129,4 @@ For more detailed information on each specific project, including configuration,
 
 *   [Frontend README](./fraud-detection-frontend/README.md)
 *   [Backend README](./fraud-detector-service/README.md)
+![Flowchart](https://github.com/user-attachments/assets/db020a47-d827-4796-8744-3dd41c3f9836)
