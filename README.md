@@ -61,22 +61,48 @@ To simplify development and testing, you can run both the frontend and backend s
     ```
     *(This will also create a `package-lock.json` and a `node_modules` folder in the root, which is expected).*
 
-4.  **Add Run Script to Root `package.json`:**
-    Create or edit the `package.json` file in the **root directory** and add the following script to the `"scripts"` section:
-    ```json
-    {
-      "name": "fraud-detection-monorepo",
-      "version": "1.0.0",
-      "private": true,
-      "scripts": {
-        "start:all": "concurrently \"npm --prefix fraud-detection-frontend run dev\" \"python fraud-detector-service/server.py\""
-      },
-      "devDependencies": {
-        "concurrently": "^8.2.2" // Or the version you installed
-      }
-    }
-    ```
-    *Note: This assumes the Python virtual environment for the backend is already activated in the terminal where you run `npm run start:all`.*
+4.  Create a Docker container with this command:
+
+```
+docker run -d \
+-e "KONG_ROLE=data_plane" \
+-e "KONG_DATABASE=off" \
+-e "KONG_VITALS=off" \
+-e "KONG_CLUSTER_MTLS=pki" \
+-e "KONG_CLUSTER_CONTROL_PLANE=acf7a2b388.eu.cp0.konghq.com:443" \
+-e "KONG_CLUSTER_SERVER_NAME=acf7a2b388.eu.cp0.konghq.com" \
+-e "KONG_CLUSTER_TELEMETRY_ENDPOINT=acf7a2b388.eu.tp0.konghq.com:443" \
+-e "KONG_CLUSTER_TELEMETRY_SERVER_NAME=acf7a2b388.eu.tp0.konghq.com" \
+-e "KONG_CLUSTER_CERT=-----BEGIN CERTIFICATE-----
+MIICjTCCAjSgAwIBAgIBATAKBggqhkjOPQQDBDB4MXYwCQYDVQQGEwJFVTBpBgNV
+BAMeYgBrAG8AbgBuAGUAYwB0AC0ARwBhAHQAZQB3AGEAeQAgAEcAdQByAHUAcwAg
+AGYAcgBhAHUAZAAgAGQAZQB0AGUAYwB0AGkAbwBuACAAQQBQAEkAIABnAGEAdABl
+AHcAYQB5MB4XDTI1MDQyMzA4NDI0NloXDTM1MDQyMzA4NDI0NloweDF2MAkGA1UE
+BhMCRVUwaQYDVQQDHmIAawBvAG4AbgBlAGMAdAAtAEcAYQB0AGUAdwBhAHkAIABH
+AHUAcgB1AHMAIABmAHIAYQB1AGQAIABkAGUAdABlAGMAdABpAG8AbgAgAEEAUABJ
+ACAAZwBhAHQAZQB3AGEAeTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABLeqLykU
+2zMTbQuweWExwLf/UZ9GZ6DwgEkfaK43ISn2CEDQEptPYkGRsaMHyXJrtevRtsvp
+1LOblhA5eC1Av8Kjga4wgaswDAYDVR0TAQH/BAIwADALBgNVHQ8EBAMCAAYwHQYD
+VR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMBcGCSsGAQQBgjcUAgQKDAhjZXJ0
+VHlwZTAjBgkrBgEEAYI3FQIEFgQUAQEBAQEBAQEBAQEBAQEBAQEBAQEwHAYJKwYB
+BAGCNxUHBA8wDQYFKQEBAQECAQoCARQwEwYJKwYBBAGCNxUBBAYCBAAUAAowCgYI
+KoZIzj0EAwQDRwAwRAIga8kXWouatXR8u5QGXpsofPHoSw5mElY2ZKjvCSqUlrYC
+ICWfaQS1LazXpPy2/SnCC0Aa+JWRFJGwryyvHbtJWTc+
+-----END CERTIFICATE-----" \
+-e "KONG_CLUSTER_CERT_KEY=-----BEGIN PRIVATE KEY-----
+MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgfG2KBAZ23jvRmfuh
+SHSqo5aO6s99p4pGpejCI8Gr3kigCgYIKoZIzj0DAQehRANCAAS3qi8pFNszE20L
+sHlhMcC3/1GfRmeg8IBJH2iuNyEp9ghA0BKbT2JBkbGjB8lya7Xr0bbL6dSzm5YQ
+OXgtQL/C
+-----END PRIVATE KEY-----" \
+-e "KONG_LUA_SSL_TRUSTED_CERTIFICATE=system" \
+-e "KONG_KONNECT_MODE=on" \
+-e "KONG_CLUSTER_DP_LABELS=created-by:quickstart,type:docker-macOsArmOS" \
+-e "KONG_ROUTER_FLAVOR=expressions" \
+-p 8000:8000 \
+-p 8443:8443 \
+kong/kong-gateway:3.10
+```
 
 **Running the System:**
 
