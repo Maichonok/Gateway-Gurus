@@ -9,3 +9,6 @@ class FraudDetection(BaseModel):
 # Define the input structure expected by the API handler
 class FraudRequest(BaseModel):
     request_text: str
+    latitude: float = 0.0  # Default value if not provided
+    longitude: float = 0.0  # Default value if not provided
+    user_id: str = ""  # Optional field for user identification

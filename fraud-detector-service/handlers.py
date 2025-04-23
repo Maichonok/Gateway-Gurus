@@ -30,7 +30,11 @@ async def handle_fraud_detection(request: web.Request) -> web.Response:
 
 
         # Call the fraud detection service
-        fraud_result: FraudDetection = await detect_fraudulent_email(request_data.request_text)
+        fraud_result: FraudDetection = await detect_fraudulent_email(
+            request_data.request_text,
+            request_data.latitude,
+            request_data.longitude
+        )
 
         # Prepare and return the successful response
         response_data = fraud_result.model_dump()
@@ -41,8 +45,8 @@ async def handle_fraud_detection(request: web.Request) -> web.Response:
     except Exception as e:
         # Log the error for debugging (replace print with proper logging in production)
         print(f"An unexpected error occurred: {e}")
-        # Return a generic internal server error
-        return web.json_response({'error': 'Internal server error'}, status=500, headers=cors_headers)
+        # Return a more detailed internal server error for demo purposes
+        return web.json_response({'error': 'Internal server error', 'details': str(e)}, status=500, headers=cors_headers)
 
 
 async def handle_options(request: web.Request) -> web.Response:
