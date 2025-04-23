@@ -35,6 +35,46 @@ h1 {
   letter-spacing: 0.2px;
 }
 
+/* Email input section */
+label {
+  font-weight: 500;
+  color: #183153;
+}
+
+input[type="email"] {
+  background: #fff;
+  padding: 7px 12px;
+  border: 1px solid #c9d3e0;
+  border-radius: 5px;
+  font-size: 1em;
+  margin-left: 8px;
+  transition: border 0.2s;
+  color: #222;
+}
+
+input[type="email"]:focus {
+  border: 1.5px solid #4c8bf5;
+  outline: none;
+}
+
+/* Demo email buttons */
+span > button[type="button"] {
+  background: #e8f0fe;
+  color: #1a73e8;
+  border: 1px solid #c9d3e0;
+  border-radius: 4px;
+  margin-left: 8px;
+  padding: 2px 10px;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: background 0.18s, border 0.18s;
+}
+
+span > button[type="button"]:hover {
+  background: #d2e3fc;
+  border: 1px solid #1a73e8;
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -57,6 +97,11 @@ textarea {
 textarea:focus {
   border: 1.5px solid #457b9d;
   background: #f1f8ff;
+}
+
+input,
+textarea {
+  box-sizing: border-box;
 }
 
 button[type="submit"] {
@@ -163,6 +208,52 @@ button[type="submit"]:hover {
   margin: 4px 0 0 18px;
   padding: 0;
   font-size: 0.96em;
+}
+.support-form {
+  margin-top: 24px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(60, 90, 150, 0.07);
+}
+
+.form-row {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.email-input {
+  width: 250px;
+}
+
+.demo-emails {
+  margin-left: 10px;
+}
+
+.demo-email-btn {
+  margin-left: 6px;
+  padding: 2px 8px;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.request-textarea {
+  width: 100%;
+  margin-bottom: 12px;
+  resize: vertical;
+}
+
+.submit-btn {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
 }
 
 textarea {

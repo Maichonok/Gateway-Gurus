@@ -2,19 +2,23 @@ import { useState } from "react";
 import axios from "axios";
 import "./App.css";
 
+const DEMO_EMAILS = ["legit_user@email.com", "suspicious_actor@email.com"];
+
 function App() {
+  const [userId, setUserId] = useState(DEMO_EMAILS[0]);
   const [requestText, setRequestText] = useState("");
   const [messages, setMessages] = useState([]); // [{role, text, risk_score, reasons}]
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!requestText.trim()) return;
+    if (!requestText.trim() || !userId.trim()) return;
 
     // Add the user's message to the history
     setMessages((prev) => [...prev, { role: "user", text: requestText }]);
 
     try {
       const response = await axios.post("http://localhost:8000/support-check", {
+        user_id: userId,
         request_text: requestText,
       });
 
@@ -42,7 +46,7 @@ function App() {
 
   return (
     <div className="AppContainer">
-      <h1>Customer Support AI Assistant</h1>
+      <h1>SecureHome AB - Submit Support Request</h1>
       <p className="subtitle">
         Smart, Secure, and Instant Support — Powered by AI
       </p>
@@ -70,15 +74,49 @@ function App() {
           ))}
         </div>
       )}
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="support-form">
+        <div className="form-row">
+          <label>
+            <strong>User ID / Email:</strong>{" "}
+            <input
+              type="email"
+              value={userId}
+              onChange={(e) => setUserId(e.target.value)}
+              placeholder="Enter your email"
+              required
+              className="email-input"
+            />
+          </label>
+          <span className="demo-emails">
+            Demo:
+            {DEMO_EMAILS.map((demo) => (
+              <button
+                type="button"
+                key={demo}
+                style={{
+                  marginLeft: 6,
+                  padding: "2px 8px",
+                  fontSize: "0.9em",
+                  cursor: "pointer",
+                }}
+                onClick={() => setUserId(demo)}
+              >
+                {demo}
+              </button>
+            ))}
+          </span>
+        </div>
         <textarea
           value={requestText}
           onChange={(e) => setRequestText(e.target.value)}
           placeholder="Enter your support request..."
           rows={5}
           required
+          className="request-textarea"
         />
-        <button type="submit">Send</button>
+        <button type="submit" className="submit-btn">
+          Send
+        </button>
       </form>
     </div>
   );
