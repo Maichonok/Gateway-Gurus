@@ -6,7 +6,7 @@ const DEMO_EMAILS = ["legit_user@email.com", "suspicious_actor@email.com"];
 
 function App() {
     const [userId, setUserId] = useState(DEMO_EMAILS[0]);
-    const [requestText, setRequestText] = useState("Hi there! Can I get access to my motorbike?");
+    const [requestText, setRequestText] = useState("");
     const [result, setResult] = useState(null);
     const [location, setLocation] = useState(null);
     const [locationError, setLocationError] = useState(null);
@@ -69,8 +69,6 @@ function App() {
         } catch (error) {
             setResult({error: `Sorry, something went wrong. Please try again. ${error}`});
         }
-
-        setRequestText("");
     };
 
     // Helper to render different outcomes
