@@ -1,19 +1,14 @@
-import asyncio
 import os
-from opperai import AsyncOpper
-from pydantic import BaseModel
-
 from dotenv import load_dotenv
 
+# Load environment variables from .env file
 load_dotenv()
 
-# Define the output structure
-class FraudDetection(BaseModel):
-    fraud: int
-    score: float
-    comment: str
+# --- OpperAI Configuration ---
+# You might load the API key from environment variables if needed by AsyncOpper
+# OPPERAI_API_KEY = os.getenv("OPPERAI_API_KEY") # Example if needed
 
-# Prompt instructions
+# --- Fraud Detection Prompt ---
 FRAUD_PROMPT = """
 You are a fraud detection agent working in customer service for a major e-commerce platform.
 Your task is to analyze incoming customer emails and determine whether the message appears fraudulent.
@@ -39,27 +34,13 @@ Output: FraudDetection(fraud=0, score=0.1, comment="Common electronics issue wit
 Now analyze the following email and provide your output in the same structured format.
 """
 
-# Async function to use in API
-async def detect_fraudulent_email(customer_email: str) -> FraudDetection:
-    opper = AsyncOpper()
+# --- LLM Model Configuration ---
+PRIMARY_MODEL = "azure/gpt-4o-eu"
+FALLBACK_MODELS = ["openai/o3-mini"]
 
-    result, _ = await opper.call(
-        name="FraudDetection",
-        instructions=FRAUD_PROMPT,
-        input=customer_email,
-        output_type=FraudDetection,
-        model="azure/gpt-4o-eu",
-        fallback_models=["openai/o3-mini"]
-    )
-
-    return result
-
-
-if __name__ == "__main__":
-    test_email = """
-    Hi,
-I’ve been trying to reach customer support for weeks now because my recent order never arrived. The tracking shows it was delivered, but I’ve checked everywhere, and there's no package. This is the third time it’s happened to me this year. I want a refund or a replacement. I'm done with this company.
-    """
-
-    result = asyncio.run(detect_fraudulent_email(test_email))
-    print(result)
+# --- Server Configuration ---
+SERVER_HOST = "localhost"
+SERVER_PORT = 3001
+# Allow requests from any origin during development.
+# For production, restrict this to your frontend's actual origin.
+ALLOWED_ORIGIN = "*" # e.g., "http://localhost:5173"
