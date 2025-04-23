@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start:all": "concurrently \"npm --prefix fraud-detection-frontend run dev\" \"python fraud-detector-service/server.py\""
+    "start:all": "concurrently \"npm --prefix customer-frontend run dev\" \"python fraud-detector-service/server.py\""
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

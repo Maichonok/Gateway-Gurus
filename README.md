@@ -6,14 +6,18 @@ This repository contains the complete system for the Gateway Gurus Fraud Detecti
 
 The system consists of two main components:
 
-1.  **Frontend (`fraud-detection-frontend/`)**: A React application (built with Vite) providing the user interface for submitting support requests. Users input their details and the request text, which is then sent to the backend for analysis. Change folder's name from `customer-frontend` to `fraud-detection-frontend/`.
-2.  **Backend (`fraud-detector-service/`)**: A Python API service (built with `aiohttp`) that receives requests from the frontend, uses an external AI service (OpperAI) to analyze the text for potential fraud indicators, and returns an assessment score and commentary.
+1.  **Frontend (`customer-frontend/`)**: A React application (built with Vite) providing the user interface 
+for submitting support requests. Users input their details and the request text, which is then sent to the backend 
+for analysis.
+2.  **Backend (`fraud-detector-service/`)**: A Python API service (built with `aiohttp`) that receives requests
+3. from the frontend, uses an external AI service (OpperAI) to analyze the text for potential fraud indicators,
+4. and returns an assessment score and commentary.
 
 ## Directory Structure
 
 ```
 /
-├── fraud-detection-frontend/  # React Frontend UI
+├── customer-frontend/  # React Frontend UI
 │   ├── public/
 │   ├── src/
 │   ├── package.json
@@ -43,7 +47,7 @@ To simplify development and testing, you can run both the frontend and backend s
 
 1.  **Install Frontend Dependencies:**
     ```bash
-    cd fraud-detection-frontend
+    cd customer-frontend
     npm install
     cd ..
     ```
@@ -127,6 +131,6 @@ You should see output from both processes in your terminal.
 
 For more detailed information on each specific project, including configuration, specific dependencies, testing, and individual running instructions, please refer to their respective README files:
 
-*   [Frontend README](./fraud-detection-frontend/README.md)
+*   [Frontend README](./customer-frontend/README.md)
 *   [Backend README](./fraud-detector-service/README.md)
 ![Flowchart](https://github.com/user-attachments/assets/db020a47-d827-4796-8744-3dd41c3f9836)

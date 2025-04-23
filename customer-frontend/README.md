@@ -31,7 +31,7 @@ that assesses potential fraud risk associated with the request.
 1. **Clone the repository:**
    ```bash
    git clone <your-repository-url>
-   cd fraud-detection-frontend
+   cd customer-frontend
    ```
 
 2. **Install dependencies:**
