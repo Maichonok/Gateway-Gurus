@@ -4,6 +4,7 @@ from pydantic import ValidationError
 
 from models import FraudRequest, FraudDetection
 from fraud_detector import detect_fraudulent_email
+from storage import save_request
 from config import ALLOWED_ORIGIN
 
 # Define common CORS headers
@@ -36,8 +37,16 @@ async def handle_fraud_detection(request: web.Request) -> web.Response:
             request_data.longitude
         )
 
-        # Prepare and return the successful response
+        # Prepare the response data
         response_data = fraud_result.model_dump()
+        
+        # Store the request and response in the log file
+        await save_request(
+            request_data.model_dump(),
+            response_data
+        )
+        
+        # Return the response to the client
         return web.json_response(response_data, headers=cors_headers)
 
     except json.JSONDecodeError:

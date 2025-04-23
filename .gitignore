@@ -1,3 +1,6 @@
 /.idea
 .vscode/*
 /node_modules
+/fraud-detector-service/data/
+/fraud-detector-service/__pycache__/
+*.pyc

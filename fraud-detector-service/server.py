@@ -1,6 +1,7 @@
 import asyncio
 from aiohttp import web
 from handlers import handle_fraud_detection, handle_options
+from admin import handle_admin
 from config import SERVER_HOST, SERVER_PORT
 
 async def main():
@@ -10,6 +11,7 @@ async def main():
     # Register routes
     app.router.add_post('/', handle_fraud_detection)
     app.router.add_route('OPTIONS', '/', handle_options) # Handle CORS preflight
+    app.router.add_get('/admin', handle_admin)  # Admin UI
 
     # Setup application runner
     runner = web.AppRunner(app)
