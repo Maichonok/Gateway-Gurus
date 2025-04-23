@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import axios from "axios";
 import "./App.css";
 
@@ -8,6 +8,43 @@ function App() {
     const [userId, setUserId] = useState(DEMO_EMAILS[0]);
     const [requestText, setRequestText] = useState("Hi there! Can I get access to my motorbike?");
     const [result, setResult] = useState(null);
+    const [location, setLocation] = useState(null);
+    const [locationError, setLocationError] = useState(null);
+
+    useEffect(() => {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setLocation({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    });
+                    setLocationError(null);
+                },
+                (error) => {
+                    let errorMessage;
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage = "User denied the request for geolocation.";
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage = "Location information is unavailable.";
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage = "The request to get user location timed out.";
+                            break;
+                        default:
+                            errorMessage = "An unknown error occurred.";
+                    }
+                    setLocationError(errorMessage);
+                    console.error(errorMessage);
+                }
+            );
+        } else {
+            setLocationError("Geolocation is not available in this browser.");
+            console.error("Geolocation is not available in this browser.");
+        }
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,10 +53,18 @@ function App() {
         setResult(null);
 
         try {
-            const response = await axios.post("http://localhost:8000/", {
+            const payload = {
                 user_id: userId,
                 request_text: requestText,
-            });
+            };
+            
+            // Add location data if available
+            if (location) {
+                payload.latitude = location.latitude;
+                payload.longitude = location.longitude;
+            }
+            
+            const response = await axios.post("http://localhost:8000/", payload);
             setResult(response.data);
         } catch (error) {
             setResult({error: `Sorry, something went wrong. Please try again. ${error}`});
@@ -108,6 +153,11 @@ function App() {
                 <button type="submit" className="submit-btn">
                     Send
                 </button>
+                {locationError && (
+                    <p className="location-error">
+                        Note: {locationError}
+                    </p>
+                )}
             </form>
 
             {result && <div className="result-block">{renderResult()}</div>}
