@@ -11,6 +11,7 @@ The system consists of two main components:
 
 ## Directory Structure
 
+```
 /
 ├── fraud-detection-frontend/  # React Frontend UI
 │   ├── public/
@@ -25,6 +26,7 @@ The system consists of two main components:
 │   └── README.md              # Backend specific details
 ├── package.json               # Root package.json for concurrent execution
 └── README.md                  # This file (Monorepo Overview)
+```
 
 ## Prerequisites
 
