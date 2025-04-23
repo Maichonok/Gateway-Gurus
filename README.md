@@ -6,7 +6,7 @@ This repository contains the complete system for the Gateway Gurus Fraud Detecti
 
 The system consists of two main components:
 
-1.  **Frontend (`fraud-detection-frontend/`)**: A React application (built with Vite) providing the user interface for submitting support requests. Users input their details and the request text, which is then sent to the backend for analysis. Change the file name from `customer-frontend` to `fraud-detection-frontend/`.
+1.  **Frontend (`fraud-detection-frontend/`)**: A React application (built with Vite) providing the user interface for submitting support requests. Users input their details and the request text, which is then sent to the backend for analysis. Change folder's name from `customer-frontend` to `fraud-detection-frontend/`.
 2.  **Backend (`fraud-detector-service/`)**: A Python API service (built with `aiohttp`) that receives requests from the frontend, uses an external AI service (OpperAI) to analyze the text for potential fraud indicators, and returns an assessment score and commentary.
 
 ## Directory Structure
