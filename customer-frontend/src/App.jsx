@@ -1,18 +1,80 @@
-import {useState, useEffect} from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import "./App.css";
 
+const API_URL = "http://localhost:8000/";
 const DEMO_EMAILS = ["legit_user@email.com", "suspicious_actor@email.com"];
 
+// Separate components for better organization
+const ResultDisplay = ({ result }) => {
+    if (!result) return null;
+    if (result.error) {
+        return <div className="error">{result.error}</div>;
+    }
+
+    return (
+        <div className={result.fraud ? "warning" : "success"}>
+            <div>
+                <strong>AI reply:</strong> {result.fraud ? 'FRAUD!' : 'Not fraud'}
+            </div>
+            <div>
+                <strong>Risk score:</strong> {result.score}
+            </div>
+            <div>
+                <strong>Comment:</strong> {result.comment}
+            </div>
+            {result.reasons && result.reasons.length > 0 && (
+                <div>
+                    <strong>Reasons:</strong>
+                    <ul>
+                        {result.reasons.map((reason, i) => (
+                            <li key={i}>{reason}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+            <div className="good-message">
+                Your request has been submitted successfully and is considered
+                safe.
+            </div>
+        </div>
+    );
+};
+
+const DemoEmailButtons = ({ emails, onSelect }) => (
+    <span className="demo-emails">
+        {emails.map((email) => (
+            <button
+                type="button"
+                key={email}
+                className="demo-email-btn"
+                onClick={() => onSelect(email)}
+            >
+                {email}
+            </button>
+        ))}
+    </span>
+);
+
 function App() {
+    // State management
     const [userId, setUserId] = useState(DEMO_EMAILS[0]);
     const [requestText, setRequestText] = useState("");
     const [result, setResult] = useState(null);
     const [location, setLocation] = useState(null);
     const [locationError, setLocationError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
+    // Get geolocation on component mount
     useEffect(() => {
-        if ("geolocation" in navigator) {
+        const getGeolocation = () => {
+            if (!("geolocation" in navigator)) {
+                const errorMsg = "Geolocation is not available in this browser.";
+                setLocationError(errorMsg);
+                console.error(errorMsg);
+                return;
+            }
+
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     setLocation({
@@ -40,17 +102,18 @@ function App() {
                     console.error(errorMessage);
                 }
             );
-        } else {
-            setLocationError("Geolocation is not available in this browser.");
-            console.error("Geolocation is not available in this browser.");
-        }
+        };
+
+        getGeolocation();
     }, []);
 
-    const handleSubmit = async (e) => {
+    // Using useCallback to memoize the submit handler
+    const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         if (!requestText.trim() || !userId.trim()) return;
 
         setResult(null);
+        setIsLoading(true);
 
         try {
             const payload = {
@@ -64,48 +127,19 @@ function App() {
                 payload.longitude = location.longitude;
             }
             
-            const response = await axios.post("http://localhost:8000/", payload);
+            const response = await axios.post(API_URL, payload);
             setResult(response.data);
+            setRequestText(""); // Clear the form after successful submission
         } catch (error) {
             setResult({error: `Sorry, something went wrong. Please try again. ${error}`});
+        } finally {
+            setIsLoading(false);
         }
-    };
+    }, [requestText, userId, location]);
 
-    // Helper to render different outcomes
-    const renderResult = () => {
-        if (!result) return null;
-        if (result.error) {
-            return <div className="error">{result.error}</div>;
-        }
-
-        return (
-            <div className={result.fraud ? "warning" : "success"}>
-                <div>
-                    <strong>AI reply:</strong> {result.fraud ? 'FRAUD!' : 'Not fraud'}
-                </div>
-                <div>
-                    <strong>Risk score:</strong> {result.score}
-                </div>
-                <div>
-                    <strong>Comment:</strong> {result.comment}
-                </div>
-                {result.reasons && result.reasons.length > 0 && (
-                    <div>
-                        <strong>Reasons:</strong>
-                        <ul>
-                            {result.reasons.map((reason, i) => (
-                                <li key={i}>{reason}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-                <div className="good-message">
-                    Your request has been submitted successfully and is considered
-                    safe.
-                </div>
-            </div>
-        );
-    };
+    // Input change handlers
+    const handleUserIdChange = (e) => setUserId(e.target.value);
+    const handleRequestTextChange = (e) => setRequestText(e.target.value);
 
     return (
         <div className="AppContainer">
@@ -121,35 +155,28 @@ function App() {
                         <input
                             type="email"
                             value={userId}
-                            onChange={(e) => setUserId(e.target.value)}
+                            onChange={handleUserIdChange}
                             placeholder="Enter your email"
                             required
                             className="email-input"
                         />
                     </label>
-                    <span className="demo-emails">
-            {DEMO_EMAILS.map((demo) => (
-                <button
-                    type="button"
-                    key={demo}
-                    className="demo-email-btn"
-                    onClick={() => setUserId(demo)}
-                >
-                    {demo}
-                </button>
-            ))}
-          </span>
+                    <DemoEmailButtons emails={DEMO_EMAILS} onSelect={setUserId} />
                 </div>
                 <textarea
                     value={requestText}
-                    onChange={(e) => setRequestText(e.target.value)}
+                    onChange={handleRequestTextChange}
                     placeholder="Enter your support request..."
                     rows={5}
                     required
                     className="request-textarea"
                 />
-                <button type="submit" className="submit-btn">
-                    Send
+                <button 
+                    type="submit" 
+                    className="submit-btn"
+                    disabled={isLoading}
+                >
+                    {isLoading ? 'Sending...' : 'Send'}
                 </button>
                 {locationError && (
                     <p className="location-error">
@@ -158,7 +185,7 @@ function App() {
                 )}
             </form>
 
-            {result && <div className="result-block">{renderResult()}</div>}
+            {result && <div className="result-block"><ResultDisplay result={result} /></div>}
         </div>
     );
 }
