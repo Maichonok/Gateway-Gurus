@@ -73,11 +73,11 @@ This project provides a backend service built with Python and `aiohttp` that ana
 ### `/`
 
 *   **Method:** `POST`
-*   **Description:** Analyzes the provided email text for fraud risk.
+*   **Description:** Analyzes the provided request text for fraud risk.
 *   **Request Body (JSON):**
     ```json
     {
-      "email": "Text content of the customer's email..."
+      "request_text": "Text content of the customer's request..."
     }
     ```
 *   **Success Response (200 OK - JSON):**
@@ -98,6 +98,6 @@ This project provides a backend service built with Python and `aiohttp` that ana
 ```bash
 curl -X POST \
      -H "Content-Type: application/json" \
-     -d '{"email": "Hi, my package arrived empty. Please refund."}' \
+     -d '{"request_text": "Hi, my package arrived empty. Please refund."}' \
      http://localhost:3001/
 ```

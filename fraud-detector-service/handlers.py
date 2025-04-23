@@ -30,7 +30,7 @@ async def handle_fraud_detection(request: web.Request) -> web.Response:
 
 
         # Call the fraud detection service
-        fraud_result: FraudDetection = await detect_fraudulent_email(request_data.email)
+        fraud_result: FraudDetection = await detect_fraudulent_email(request_data.request_text)
 
         # Prepare and return the successful response
         response_data = fraud_result.model_dump()

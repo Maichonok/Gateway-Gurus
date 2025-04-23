@@ -8,4 +8,4 @@ class FraudDetection(BaseModel):
 
 # Define the input structure expected by the API handler
 class FraudRequest(BaseModel):
-    email: str
+    request_text: str
