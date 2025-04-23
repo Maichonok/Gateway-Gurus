@@ -7,41 +7,136 @@ const DEMO_EMAILS = ["legit_user@email.com", "suspicious_actor@email.com"];
 function App() {
   const [userId, setUserId] = useState(DEMO_EMAILS[0]);
   const [requestText, setRequestText] = useState("");
-  const [messages, setMessages] = useState([]); // [{role, text, risk_score, reasons}]
+  const [result, setResult] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!requestText.trim() || !userId.trim()) return;
 
-    // Add the user's message to the history
-    setMessages((prev) => [...prev, { role: "user", text: requestText }]);
+    setResult(null);
 
     try {
       const response = await axios.post("http://localhost:8000/support-check", {
         user_id: userId,
         request_text: requestText,
       });
-
-      // It is assumed that the backend returns reply, risk_score, and reasons
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          text: response.data.reply,
-          risk_score: response.data.risk_score,
-          reasons: response.data.reasons,
-        },
-      ]);
+      setResult(response.data);
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          text: "Sorry, something went wrong. Please try again.",
-        },
-      ]);
+      setResult({ error: "Sorry, something went wrong. Please try again." });
     }
+
     setRequestText("");
+  };
+
+  // Helper to render different outcomes
+  const renderResult = () => {
+    if (!result) return null;
+    if (result.error) {
+      return <div className="error">{result.error}</div>;
+    }
+
+    switch (result.action) {
+      case "allow":
+        return (
+          <div className="success">
+            <div>
+              <strong>AI Reply:</strong> {result.reply}
+            </div>
+            <div>
+              <strong>Risk Score:</strong> {result.risk_score}
+            </div>
+            {result.reasons && result.reasons.length > 0 && (
+              <div>
+                <strong>Reasons:</strong>
+                <ul>
+                  {result.reasons.map((reason, i) => (
+                    <li key={i}>{reason}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <div className="good-message">
+              Your request has been submitted successfully and is considered
+              safe.
+            </div>
+          </div>
+        );
+      case "warn":
+        return (
+          <div className="warning">
+            <div>
+              <strong>AI Reply:</strong> {result.reply}
+            </div>
+            <div>
+              <strong>Risk Score:</strong> {result.risk_score}
+            </div>
+            {result.reasons && result.reasons.length > 0 && (
+              <div>
+                <strong>Reasons:</strong>
+                <ul>
+                  {result.reasons.map((reason, i) => (
+                    <li key={i}>{reason}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {result.recommendations && result.recommendations.length > 0 && (
+              <div>
+                <strong>Recommendations:</strong>
+                <ul>
+                  {result.recommendations.map((rec, i) => (
+                    <li key={i}>{rec}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <div className="warn-message">
+              Warning: Your request contains suspicious content. Please review
+              the recommendations above.
+            </div>
+          </div>
+        );
+      case "block":
+        return (
+          <div className="block">
+            <div>
+              <strong>AI Reply:</strong> {result.reply}
+            </div>
+            <div>
+              <strong>Risk Score:</strong> {result.risk_score}
+            </div>
+            {result.reasons && result.reasons.length > 0 && (
+              <div>
+                <strong>Reasons:</strong>
+                <ul>
+                  {result.reasons.map((reason, i) => (
+                    <li key={i}>{reason}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <div className="block-message">
+              <strong>
+                Your account has been temporarily suspended due to a high-risk
+                or malicious request.
+              </strong>
+              <br />
+              If you believe this is a mistake, please contact support.
+            </div>
+          </div>
+        );
+      default:
+        return (
+          <div>
+            <div>
+              <strong>AI Reply:</strong> {result.reply}
+            </div>
+            <div>
+              <strong>Risk Score:</strong> {result.risk_score}
+            </div>
+          </div>
+        );
+    }
   };
 
   return (
@@ -50,30 +145,7 @@ function App() {
       <p className="subtitle">
         Smart, Secure, and Instant Support — Powered by AI
       </p>
-      {messages.length > 0 && (
-        <div className="chat-thread">
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={msg.role === "user" ? "msg-user" : "msg-assistant"}
-            >
-              <div className="msg-text">{msg.text}</div>
-              {msg.role === "assistant" && msg.risk_score !== undefined && (
-                <div className="fraud-info">
-                  <span>Risk Score: {msg.risk_score}</span>
-                  {msg.reasons && (
-                    <ul>
-                      {msg.reasons.map((reason, i) => (
-                        <li key={i}>{reason}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+
       <form onSubmit={handleSubmit} className="support-form">
         <div className="form-row">
           <label>
@@ -88,17 +160,11 @@ function App() {
             />
           </label>
           <span className="demo-emails">
-            Demo:
             {DEMO_EMAILS.map((demo) => (
               <button
                 type="button"
                 key={demo}
-                style={{
-                  marginLeft: 6,
-                  padding: "2px 8px",
-                  fontSize: "0.9em",
-                  cursor: "pointer",
-                }}
+                className="demo-email-btn"
                 onClick={() => setUserId(demo)}
               >
                 {demo}
@@ -118,6 +184,8 @@ function App() {
           Send
         </button>
       </form>
+
+      {result && <div className="result-block">{renderResult()}</div>}
     </div>
   );
 }

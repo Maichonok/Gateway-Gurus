@@ -260,6 +260,88 @@ textarea {
   color: #222;
 }
 
+.result-block {
+  margin-top: 28px;
+  padding: 0;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(60, 70, 130, 0.09);
+  max-width: 540px;
+  background: #f9f9fb;
+  border: 1.5px solid #e0e4ed;
+  font-size: 1.07em;
+  transition: box-shadow 0.2s;
+}
+
+.success,
+.warning,
+.block {
+  padding: 22px 26px 16px 26px;
+  border-radius: 12px;
+  margin: 0;
+}
+
+.success {
+  background: #e8f9e2;
+  border-left: 6px solid #3bbd36;
+}
+
+.warning {
+  background: #fffbe6;
+  border-left: 6px solid #ffb300;
+}
+
+.block {
+  background: #ffeaea;
+  border-left: 6px solid #d90429;
+}
+
+.good-message {
+  color: #218838;
+  margin-top: 14px;
+  font-weight: bold;
+  font-size: 1.02em;
+}
+
+.warn-message {
+  color: #b8860b;
+  margin-top: 14px;
+  font-weight: bold;
+  font-size: 1.02em;
+}
+
+.block-message {
+  color: #d90429;
+  margin-top: 14px;
+  font-weight: bold;
+  font-size: 1.02em;
+}
+
+.result-block strong {
+  color: #1d3557;
+}
+
+.result-block ul {
+  margin: 8px 0 0 22px;
+  padding: 0;
+  font-size: 0.98em;
+}
+
+.result-block div,
+.result-block ul,
+.result-block li {
+  color: #2c3e50;
+}
+
+.error {
+  color: #d90429;
+  background: #fff0f0;
+  padding: 14px 20px;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-weight: bold;
+  border-left: 5px solid #d90429;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
