@@ -23,7 +23,7 @@ async def detect_fraudulent_email(customer_email: str, latitude: float, longitud
     result, _ = await opper.call(
         name="FraudDetection", # A descriptive name for the Opper call
         instructions=FRAUD_PROMPT,
-        input=customer_email,
+        input=full_input,
         output_type=FraudDetection,
         model=PRIMARY_MODEL,
         fallback_models=FALLBACK_MODELS
