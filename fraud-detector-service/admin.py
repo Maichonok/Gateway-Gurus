@@ -4,6 +4,7 @@ Provides a web UI to view stored requests.
 """
 from aiohttp import web
 import datetime
+import html
 from storage import load_requests
 
 # HTML template for the admin page
@@ -43,6 +44,7 @@ ADMIN_HTML_TEMPLATE = """
         td {{
             padding: 16px;
             border-bottom: 1px solid #ddd;
+            vertical-align: top;
         }}
         .safe {{
             background-color: #d4edda;
@@ -56,12 +58,10 @@ ADMIN_HTML_TEMPLATE = """
             background-color: #f8d7da;
             color: #721c24;
         }}
-        .ellipsis {{
+        .text-content {{
+            white-space: pre-wrap;
+            word-break: break-word;
             max-width: 400px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: block;
         }}
         .timestamp {{
             white-space: nowrap;
@@ -137,9 +137,9 @@ ROW_TEMPLATE = """
     <td class="timestamp">{timestamp}</td>
     <td>{user_id}</td>
     <td>{location}</td>
-    <td><span class="ellipsis">{request_text}</span></td>
+    <td class="text-content">{request_text}</td>
     <td class="score">{score}</td>
-    <td><span class="ellipsis">{comment}</span></td>
+    <td class="text-content">{comment}</td>
 </tr>
 """
 
@@ -166,13 +166,11 @@ def get_row_class(score):
     else:
         return "danger"
 
-def truncate_text(text, max_length=100):
-    """Truncate text and add ellipsis if needed."""
+def sanitize_text(text):
+    """Sanitize text for HTML display."""
     if not text:
         return "N/A"
-    if len(text) <= max_length:
-        return text
-    return text[:max_length] + "..."
+    return html.escape(text)
 
 async def handle_admin(request):
     """Handler for the admin UI page."""
@@ -193,9 +191,10 @@ async def handle_admin(request):
                 lng = req["request"].get("longitude", "N/A")
                 location = f"{lat}, {lng}" if lat != "N/A" and lng != "N/A" else "N/A"
                 
-                request_text = truncate_text(req["request"]["request_text"])
+                # Full text instead of truncated
+                request_text = sanitize_text(req["request"]["request_text"])
                 score = req["response"]["score"]
-                comment = truncate_text(req["response"]["comment"])
+                comment = sanitize_text(req["response"]["comment"])
                 
                 row_class = get_row_class(score)
                 

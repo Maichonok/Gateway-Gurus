@@ -97,7 +97,7 @@ const ResultDisplay = ({ result }) => {
   }
 
   return (
-    <div className={result.fraud ? "warning" : "success"}>
+    <div className={result.fraud ? "error" : "success"}>
       <div>
         <strong>AI reply:</strong> {result.fraud ? 'FRAUD!' : 'Not fraud'}
       </div>
