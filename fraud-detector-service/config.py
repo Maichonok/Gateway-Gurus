@@ -45,33 +45,33 @@ You must output your judgment using the structured format FraudDetection:
 - comment: A brief explanation based on reasoning.
 
 When making your assessment, consider:
-1. Specificity and plausibility of the complaint (e.g., broken sensor, false alarm, system unresponsive).
-2. Consistency with typical customer behavior (e.g., frequency of prior complaints, billing history).
+1. Specificity and plausibility of the complaint. **Vague or generic messages should raise suspicion**, even if the location is valid.
+2. Consistency with typical customer behavior (e.g., prior complaint frequency, account status).
 3. Tone and language: emotional pressure, aggression, or urgency (e.g., “cancel immediately,” “I demand…”).
-4. Presence or absence of supporting details or evidence (e.g., photo of the device, alarm logs).
-5. Unusual or suspicious behavior patterns (e.g., multiple complaints from the same IP, repeated refund requests).
-6. Geolocation data (latitude, longitude): If the request is submitted from **outside Sweden**, but the home address is in Sweden, **flag as likely fraud**.
-
-Sweden’s typical latitude/longitude range is:
-- Latitude: 55.0 to 69.0
-- Longitude: 11.0 to 24.0
+4. Presence or absence of supporting details or evidence (e.g., photo of the device, error logs, dates).
+5. Unusual behavior patterns (e.g., repeated refund requests, inconsistent billing history).
+6. Geolocation data (latitude, longitude):  
+   - If the message is sent from **outside Sweden** and the home address is inside Sweden, **flag it as likely fraud**.  
+   - Sweden’s typical location range:
+     - Latitude: 55.0 to 69.0  
+     - Longitude: 11.0 to 24.0
 
 ### Examples:
 
 Email: "Hi, my motion sensor keeps triggering false alarms at night. I’ve tried resetting it but the issue continues. Can I get a technician to check it?"
-Latitude: 59.3
+Latitude: 59.3  
 Longitude: 17.9  
-Output: FraudDetection(fraud=0, score=0.1, comment="Legitimate-sounding technical issue with detail; location is valid and consistent.")
+Output: FraudDetection(fraud=0, score=0.1, comment="Detailed and specific complaint from valid location.")
 
-Email: "I want a refund for last month. My alarm never worked and I already canceled. Check your records."
-Latitude: 46.8  
-Longitude: 13.4  
-Output: FraudDetection(fraud=1, score=0.85, comment="High suspicion due to mismatch in location and demanding tone without evidence.")
+Email: "I want a refund. It’s not working."
+Latitude: 60.1  
+Longitude: 18.2  
+Output: FraudDetection(fraud=1, score=0.85, comment="Location is within Sweden, but message is vague and lacks any technical or situational detail.")
 
-Email: "My door camera is offline. I’ve tried calling support three times. I need this fixed or I’ll cancel everything."
-Latitude: 61.2  
-Longitude: 15.1  
-Output: FraudDetection(fraud=0, score=0.3, comment="Frustrated tone but geolocation and scenario are plausible.")
+Email: "I was charged twice for the same month. Please fix this billing issue."
+Latitude: 48.85  
+Longitude: 2.35  
+Output: FraudDetection(fraud=1, score=0.9, comment="Message is from outside Sweden and lacks any customer-specific detail.")
 
 Now analyze the following email and location data. Provide your output in the same structured format.
 """
